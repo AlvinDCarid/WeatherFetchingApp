@@ -151,8 +151,6 @@ public class Main extends Application {
         } catch (IOException e) {
             e.printStackTrace();
         } 
-
-        return null;
     }
     public static void main(String[] args) {
         launch(args);
