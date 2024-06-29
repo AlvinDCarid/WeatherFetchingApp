@@ -1,6 +1,5 @@
 package application;
 
-
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
@@ -41,25 +40,25 @@ public class Main extends Application {
             StackPane stackPane = new StackPane(imageView);
 
             // Main content VBox
-            VBox mainVBox = new VBox(200); // Adjusted to default spacing
+            VBox mainVBox = new VBox(20); // Adjusted to default spacing
             mainVBox.setPadding(new Insets(40));
             mainVBox.setFillWidth(true);
             mainVBox.setMaxWidth(400);
 
             // Weather Icons HBox
-            HBox iconsBox = new HBox(180); // Horizontal gap between icons
+            HBox iconsBox = new HBox(20); // Horizontal gap between icons
 
             // Temp Icon Area
             VBox iconArea1 = new VBox();
             TextArea area1 = new TextArea();
-            area1.setPrefSize(16, 18);
+            area1.setPrefSize(200, 50); // Increased size
             area1.setEditable(false);
             iconArea1.getChildren().addAll(createIcon("temp.png", 60, 60), area1);
 
             // Wind Icon Area
             VBox iconArea2 = new VBox();
             TextArea area2 = new TextArea();
-            area2.setPrefSize(3, 5);
+            area2.setPrefSize(200, 50); // Increased size
             area2.setEditable(false);
             iconArea2.getChildren().addAll(createIcon("wind.png", 60, 60), area2);
 
@@ -112,52 +111,45 @@ public class Main extends Application {
     }
 
     // Method to fetch weather data using OpenWeatherMap API
-//    @SuppressWarnings("deprecation")
-	private void fetchWeatherData(String city, TextArea tempArea, TextArea windArea) {
+    private void fetchWeatherData(String city, TextArea tempArea, TextArea windArea) {
         try {
-        	URL url = null;
+            URL url = null;
             String apiKey = "5bb817f64de124c3c69da6395e19765a"; // Replace with your OpenWeatherMap API key
             String urlString = "https://api.openweathermap.org/data/2.5/weather?q=" + city + "&appid=" + apiKey;
 
             try {
-				url = new URI(urlString).toURL();
-			} catch (URISyntaxException e) {
-				e.printStackTrace();
-			}
+                url = new URI(urlString).toURL();
+            } catch (URISyntaxException e) {
+                e.printStackTrace();
+            }
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("GET");
 
             BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-            String response = new String();
+            String response = "";
             String line;
             while ((line = reader.readLine()) != null) {
                 response += line;
-            } 
+            }
             reader.close();
 
             JSONObject json = (JSONObject) JSONValue.parse(response.toString());
 
             JSONObject main = (JSONObject) json.get("main");
             Double temperature = (Double) main.get("temp") - 273.15; // Convert to Celsius
-            Double windSpeed = (Double) main.get("windSpeed");
-         
-            JSONArray  weatherArray = (JSONArray) json.get("weather");
-            JSONObject weather = (JSONObject) weatherArray.get(0);
-            String Description = (String) weather.get("Description");
-            System.out.println(Description);
-            tempArea.setText("Temperature: %.2f °C" +temperature);
-            windArea.setText("Wind Speed: %d m/s" + windSpeed);
-                       
+
+            JSONObject wind = (JSONObject) json.get("wind");
+            Double windSpeed = (Double) wind.get("speed");
+
+            tempArea.setText(String.format("Temperature: %.2f °C", temperature));
+            windArea.setText(String.format("Wind Speed: %.2f m/s", windSpeed));
+
         } catch (IOException e) {
             e.printStackTrace();
-        } 
+        }
     }
+
     public static void main(String[] args) {
         launch(args);
     }
 }
-   
-
-
-
-	 
