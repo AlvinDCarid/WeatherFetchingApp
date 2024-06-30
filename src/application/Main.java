@@ -29,7 +29,6 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) {
         try {
-            // Background Image
             Image backgroundImage = new Image("WallP.jpg");
             ImageView imageView = new ImageView(backgroundImage);
             imageView.setPreserveRatio(true);
@@ -38,57 +37,48 @@ public class Main extends Application {
             imageView.setOpacity(0.8);
             StackPane stackPane = new StackPane(imageView);
 
-            // Main content VBox
-            VBox mainVBox = new VBox(20); // Adjusted to default spacing
+            VBox mainVBox = new VBox(120); 
             mainVBox.setPadding(new Insets(40));
             mainVBox.setFillWidth(true);
             mainVBox.setMaxWidth(400);
 
-            // Weather Icons HBox
-            HBox iconsBox = new HBox(20); // Horizontal gap between icons
-
-            // Temp Icon Area
-            VBox iconArea1 = new VBox();
+            HBox iconsBox = new HBox(20); 
+            VBox iconArea1 = new VBox(10);
             TextArea area1 = new TextArea();
-            area1.setPrefSize(200, 50); // Increased size
+            area1.setPrefSize(160, 50); 
             area1.setEditable(false);
             iconArea1.getChildren().addAll(createIcon("temp.png", 60, 60), area1);
-
-            // Wind Icon Area
-            VBox iconArea2 = new VBox();
+            iconArea1.setAlignment(javafx.geometry.Pos.CENTER);
+            VBox iconArea2 = new VBox(10);
             TextArea area2 = new TextArea();
-            area2.setPrefSize(200, 50); // Increased size
+            area2.setPrefSize(160, 50); 
             area2.setEditable(false);
             iconArea2.getChildren().addAll(createIcon("wind.png", 60, 60), area2);
+            iconArea2.setAlignment(javafx.geometry.Pos.CENTER);
 
             iconsBox.getChildren().addAll(iconArea1, iconArea2);
             iconsBox.setAlignment(javafx.geometry.Pos.CENTER);
 
-            // Search TextField
             TextField textField = new TextField();
             textField.setPromptText("Enter city name...");
             textField.setStyle("-fx-font-size: 14pt; -fx-padding: 9px;");
 
-            // Search Button
             Button searchButton = new Button("Search");
             searchButton.setStyle("-fx-font-size: 14pt; -fx-padding: 9px;");
             searchButton.setOnAction(event -> {
                 String city = textField.getText().trim();
                 fetchWeatherData(city, area1, area2);
-                textField.clear();
+//                textField.clear();
             });
 
-            // Add elements to VBox in correct order
             mainVBox.getChildren().addAll(textField, iconsBox, searchButton);
             mainVBox.setAlignment(javafx.geometry.Pos.CENTER);
 
             stackPane.getChildren().add(mainVBox);
 
-            // Scene setup
             Scene scene = new Scene(stackPane, 500, 600);
             scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 
-            // Stage setup
             Image icon = new Image("cloudy.png");
             primaryStage.getIcons().add(icon);
             primaryStage.setResizable(false);
@@ -100,7 +90,6 @@ public class Main extends Application {
         }
     }
 
-    // Helper method to create ImageView from image file
     private ImageView createIcon(String iconName, double width, double height) {
         Image iconImage = new Image(iconName);
         ImageView iconImageView = new ImageView(iconImage);
@@ -109,11 +98,14 @@ public class Main extends Application {
         return iconImageView;
     }
 
-    // Method to fetch weather data using OpenWeatherMap API
     private void fetchWeatherData(String city, TextArea tempArea, TextArea windArea) {
+    	if (city.contains(" ")) {
+            city = city.replace(" ", "%20");
+        }
+
         try {
             URL url = null;
-            String apiKey = "5bb817f64de124c3c69da6395e19765a"; // Replace with your OpenWeatherMap API key
+            String apiKey = "5bb817f64de124c3c69da6395e19765a";
             String urlString = "https://api.openweathermap.org/data/2.5/weather?q=" + city + "&appid=" + apiKey;
 
             try {
@@ -135,12 +127,13 @@ public class Main extends Application {
             JSONObject json = (JSONObject) JSONValue.parse(response.toString());
 
             JSONObject main = (JSONObject) json.get("main");
-            Double temperature = (Double) main.get("temp") - 273.15; // Convert to Celsius
+            Double temperature = (Double) main.get("temp") - 273.15; 
 
             JSONObject wind = (JSONObject) json.get("wind");
             Double windSpeed = (Double) wind.get("speed");
 
             tempArea.setText(String.format("Temperature: %.2f °C", temperature));
+            
             windArea.setText(String.format("Wind Speed: %.2f m/s", windSpeed));
 
         } catch (IOException e) {
