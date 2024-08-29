@@ -3,4 +3,4 @@
     - Coded using Java libray JavaFx and OpenWeatherAPI
 
 ## UI Display of the Weather Application
-![image of the UI](display.PNG)
+![image of the UI](DispayNew.PNG)
