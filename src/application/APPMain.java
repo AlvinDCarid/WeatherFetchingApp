@@ -24,7 +24,7 @@ import java.net.URL;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 
-public class Main extends Application {
+public class APPMain extends Application {
   
     @Override
     public void start(Stage primaryStage) {
@@ -42,21 +42,29 @@ public class Main extends Application {
             mainVBox.setFillWidth(true);
             mainVBox.setMaxWidth(400);
 
-            HBox iconsBox = new HBox(20); 
-            VBox iconArea1 = new VBox(10);
+            HBox iconsBox = new HBox(10); 
+            	VBox iconArea1 = new VBox(10);
             TextArea area1 = new TextArea();
-            area1.setPrefSize(160, 50); 
+            area1.setPrefSize(250, 50); 
             area1.setEditable(false);
             iconArea1.getChildren().addAll(createIcon("temp.png", 60, 60), area1);
             iconArea1.setAlignment(javafx.geometry.Pos.CENTER);
-            VBox iconArea2 = new VBox(10);
+            	VBox iconArea2 = new VBox(10);
             TextArea area2 = new TextArea();
-            area2.setPrefSize(160, 50); 
+            area2.setPrefSize(250, 50); 
             area2.setEditable(false);
             iconArea2.getChildren().addAll(createIcon("wind.png", 60, 60), area2);
             iconArea2.setAlignment(javafx.geometry.Pos.CENTER);
 
-            iconsBox.getChildren().addAll(iconArea1, iconArea2);
+            
+            	VBox iconArea3 = new VBox(10);
+            TextArea area3 = new TextArea();
+            area3.setPrefSize(250, 50); 
+            area3.setEditable(false);
+            iconArea3.getChildren().addAll(createIcon("humid.png", 60, 60), area3);
+            iconArea3.setAlignment(javafx.geometry.Pos.CENTER);
+            
+            iconsBox.getChildren().addAll(iconArea1, iconArea2, iconArea3);
             iconsBox.setAlignment(javafx.geometry.Pos.CENTER);
 
             TextField textField = new TextField();
@@ -67,7 +75,7 @@ public class Main extends Application {
             searchButton.setStyle("-fx-font-size: 14pt; -fx-padding: 9px;");
             searchButton.setOnAction(event -> {
                 String city = textField.getText().trim();
-                fetchWeatherData(city, area1, area2);
+                fetchWeatherData(city, area1, area2, area3);
 //                textField.clear();
             });
 
@@ -98,7 +106,7 @@ public class Main extends Application {
         return iconImageView;
     }
 
-    private void fetchWeatherData(String city, TextArea tempArea, TextArea windArea) {
+    private void fetchWeatherData(String city, TextArea tempArea, TextArea windArea, TextArea humidArea) {
     	if (city.contains(" ")) {
             city = city.replace(" ", "%20");
         }
@@ -128,13 +136,17 @@ public class Main extends Application {
 
             JSONObject main = (JSONObject) json.get("main");
             Double temperature = (Double) main.get("temp") - 273.15; 
-
+            
+            long humidity = (long) main.get("humidity");
+            
             JSONObject wind = (JSONObject) json.get("wind");
             Double windSpeed = (Double) wind.get("speed");
 
-            tempArea.setText(String.format("Temperature: %.2f °C", temperature));
+            tempArea.setText(String.format("Temp: %.2f °C", temperature));
             
-            windArea.setText(String.format("Wind Speed: %.2f m/s", windSpeed));
+            windArea.setText(String.format("Wind: %.2f m/s", windSpeed));
+            
+            humidArea.setText(String.format("Humid: %d%%", humidity));
 
         } catch (IOException e) {
             e.printStackTrace();
