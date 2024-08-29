@@ -113,8 +113,8 @@ public class APPMain extends Application {
 
         try {
             URL url = null;
-            String apiKey = "5bb817f64de124c3c69da6395e19765a";
-            String urlString = "https://api.openweathermap.org/data/2.5/weather?q=" + city + "&appid=" + apiKey;
+            String apiKey = "Enter Your Key Here";
+            String urlString = "https://api.openweathermap.org/data/2.5/we" + city + "&appid=" + apiKey;
 
             try {
                 url = new URI(urlString).toURL();
