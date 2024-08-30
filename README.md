@@ -1,5 +1,5 @@
 # A Simple Weather Data Fetching Application Coded in Java.
-## Displays wind speed and temperature of the city given in the search bar. 
+## Displays wind speed, temperature and of the city given in the search bar. 
     - Coded using Java libray JavaFx and OpenWeatherAPI
 
 ## UI Display of the Weather Application
